@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chess Buddy Lessons</title>
+<style>
+:root { --bg:#f6f7f9; --card:#ffffff; --text:#1f2430; --muted:#5f6675; --line:#e3e6ec;
+        --you:#e8f1fb; --accent:#2f5d8a; --tag:#fff1db; --tagtext:#8a5a12; }
+@media (prefers-color-scheme: dark) {
+  :root { --bg:#14171c; --card:#1d2128; --text:#e8eaee; --muted:#9aa1ae; --line:#2b313b;
+          --you:#1e2d3d; --accent:#7fb0e0; --tag:#3a2f1c; --tagtext:#f0c27a; }
+}
+* { box-sizing:border-box; }
+body { margin:0; padding:2rem 1rem; background:var(--bg); color:var(--text);
+       font-family:"Segoe UI", Calibri, Arial, sans-serif; line-height:1.5; }
+main { max-width:760px; margin:0 auto; }
+h1 { font-size:1.6rem; margin:0 0 1.5rem; color:var(--accent); }
+.card { background:var(--card); border:1px solid var(--line); border-radius:14px;
+        padding:1.25rem 1.4rem; margin-bottom:1.5rem; }
+.card h2 { margin:0 0 .25rem; font-size:1.3rem; }
+.badge { display:inline-block; font-size:.8rem; padding:.1rem .6rem; border-radius:999px;
+         background:var(--accent); color:#fff; margin-bottom:.6rem; }
+.intro, .finish { color:var(--muted); margin:.4rem 0 1rem; }
+.finish { margin:1rem 0 0; }
+.tablewrap { overflow-x:auto; }
+table { width:100%; border-collapse:collapse; font-size:.95rem; }
+th { text-align:left; font-size:.8rem; text-transform:uppercase; letter-spacing:.04em;
+     color:var(--muted); padding:.4rem .6rem; border-bottom:2px solid var(--line); }
+td { padding:.5rem .6rem; border-bottom:1px solid var(--line); vertical-align:top; }
+tr.you td { background:var(--you); }
+td.move { font-weight:600; white-space:nowrap; font-variant-numeric:tabular-nums; }
+td.who { white-space:nowrap; color:var(--muted); }
+.tag { display:inline-block; font-size:.75rem; padding:0 .45rem; margin-left:.4rem;
+       border-radius:6px; background:var(--tag); color:var(--tagtext); }
+.legend { font-size:.85rem; color:var(--muted); margin-top:.6rem; }
+</style>
+</head>
+<body>
+<main>
+<h1>Chess Buddy: Opening Lessons</h1>
+
+<section class="card">
+  <h2>Ruy Lopez</h2>
+  <span class="badge">You play White</span>
+  <p class="intro">Let&#x27;s learn the Ruy Lopez! You play White.</p>
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>Move</th><th>Who</th><th>What it means</th></tr></thead>
+      <tbody>
+        <tr class="you"><td class="move">1. e4</td><td class="who">You</td><td>Move your king&#x27;s pawn two squares to grab space in the center.</td></tr><tr class="program"><td class="move">1... e5</td><td class="who">Program</td><td>Black copies you and fights for the center too.</td></tr><tr class="you"><td class="move">2. Nf3</td><td class="who">You</td><td>Bring out a knight so it attacks Black&#x27;s pawn on e5.</td></tr><tr class="program"><td class="move">2... Nc6</td><td class="who">Program</td><td>Black defends the pawn with a knight.</td></tr><tr class="you"><td class="move">3. Bb5</td><td class="who">You</td><td>Move your bishop to b5 to pressure the knight. This is the Ruy Lopez!</td></tr><tr class="program"><td class="move">3... a6</td><td class="who">Program</td><td>Black asks your bishop what it wants to do.</td></tr><tr class="you"><td class="move">4. Ba4</td><td class="who">You</td><td>Keep your bishop safe and keep the pressure on.</td></tr><tr class="program"><td class="move">4... Nf6</td><td class="who">Program</td><td>Black brings out a knight and attacks your e4 pawn.</td></tr><tr class="you"><td class="move">5. O-O</td><td class="who">You</td><td>Castle: slide your king two squares toward the rook, then hop the rook over.<span class="tag">castling</span></td></tr><tr class="program"><td class="move">5... Be7</td><td class="who">Program</td><td>Black brings out a bishop to help protect their king.</td></tr><tr class="you"><td class="move">6. Re1</td><td class="who">You</td><td>Put your rook behind your e4 pawn to protect it.</td></tr><tr class="program"><td class="move">6... b5</td><td class="who">Program</td><td>Black pushes a pawn to chase your bishop.</td></tr><tr class="you"><td class="move">7. Bb3</td><td class="who">You</td><td>Slide your bishop back to b3, where it still watches the center.</td></tr><tr class="program"><td class="move">7... d6</td><td class="who">Program</td><td>Black protects the pawn on e5 once more.</td></tr><tr class="you"><td class="move">8. c3</td><td class="who">You</td><td>Get ready to build a big center with d4 next.</td></tr><tr class="program"><td class="move">8... O-O</td><td class="who">Program</td><td>Black castles too, so both kings are safe.<span class="tag">castling</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="legend">16 moves in total, 8 of them are yours (shaded rows).</p>
+  <p class="finish">Great job! You played the first 8 moves of the Ruy Lopez.</p>
+</section>
+<section class="card">
+  <h2>Queen&#x27;s Gambit</h2>
+  <span class="badge">You play White</span>
+  <p class="intro">Let&#x27;s learn the Queen&#x27;s Gambit! You play White.</p>
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>Move</th><th>Who</th><th>What it means</th></tr></thead>
+      <tbody>
+        <tr class="you"><td class="move">1. d4</td><td class="who">You</td><td>Move your queen&#x27;s pawn two squares to take the center.</td></tr><tr class="program"><td class="move">1... d5</td><td class="who">Program</td><td>Black does the same with their queen&#x27;s pawn.</td></tr><tr class="you"><td class="move">2. c4</td><td class="who">You</td><td>Offer a pawn to pull Black&#x27;s pawn away. This is the Queen&#x27;s Gambit!</td></tr><tr class="program"><td class="move">2... e6</td><td class="who">Program</td><td>Black says no thanks and protects the pawn on d5.</td></tr><tr class="you"><td class="move">3. Nc3</td><td class="who">You</td><td>Bring out a knight to watch the center.</td></tr><tr class="program"><td class="move">3... Nf6</td><td class="who">Program</td><td>Black brings out a knight too.</td></tr><tr class="you"><td class="move">4. Bg5</td><td class="who">You</td><td>Send your bishop out to pressure Black&#x27;s knight on f6.</td></tr><tr class="program"><td class="move">4... Be7</td><td class="who">Program</td><td>Black brings out a bishop to support the knight.</td></tr><tr class="you"><td class="move">5. e3</td><td class="who">You</td><td>Open a path for your other bishop and protect your pawn on d4.</td></tr><tr class="program"><td class="move">5... O-O</td><td class="who">Program</td><td>Black castles to keep the king safe.<span class="tag">castling</span></td></tr><tr class="you"><td class="move">6. Nf3</td><td class="who">You</td><td>Bring out your second knight.</td></tr><tr class="program"><td class="move">6... Nbd7</td><td class="who">Program</td><td>Black brings out the second knight too.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="legend">12 moves in total, 6 of them are yours (shaded rows).</p>
+  <p class="finish">Nice work! You played the first 6 moves of the Queen&#x27;s Gambit.</p>
+</section>
+<section class="card">
+  <h2>French Defense</h2>
+  <span class="badge">You play Black</span>
+  <p class="intro">Let&#x27;s learn the French Defense! You play Black, so White moves first.</p>
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>Move</th><th>Who</th><th>What it means</th></tr></thead>
+      <tbody>
+        <tr class="program"><td class="move">1. e4</td><td class="who">Program</td><td>White starts by moving the king&#x27;s pawn two squares.</td></tr><tr class="you"><td class="move">1... e6</td><td class="who">You</td><td>Move your king&#x27;s pawn one square. This is the French Defense!</td></tr><tr class="program"><td class="move">2. d4</td><td class="who">Program</td><td>White builds a big center with a second pawn.</td></tr><tr class="you"><td class="move">2... d5</td><td class="who">You</td><td>Challenge White&#x27;s center by moving your queen&#x27;s pawn two squares.</td></tr><tr class="program"><td class="move">3. Nc3</td><td class="who">Program</td><td>White protects the e4 pawn with a knight.</td></tr><tr class="you"><td class="move">3... Nf6</td><td class="who">You</td><td>Bring out a knight to attack the pawn on e4.</td></tr><tr class="program"><td class="move">4. e5</td><td class="who">Program</td><td>White pushes the pawn forward to chase your knight away.</td></tr><tr class="you"><td class="move">4... Nfd7</td><td class="who">You</td><td>Move your knight back to d7 so it stays safe.</td></tr><tr class="program"><td class="move">5. f4</td><td class="who">Program</td><td>White protects the e5 pawn with another pawn.</td></tr><tr class="you"><td class="move">5... c5</td><td class="who">You</td><td>Attack White&#x27;s center with your c-pawn.</td></tr><tr class="program"><td class="move">6. Nf3</td><td class="who">Program</td><td>White brings out a knight to protect the pawn on d4.</td></tr><tr class="you"><td class="move">6... Nc6</td><td class="who">You</td><td>Bring out your knight to attack d4 again.</td></tr><tr class="program"><td class="move">7. Be3</td><td class="who">Program</td><td>White brings out a bishop to guard the pawn on d4.</td></tr><tr class="you"><td class="move">7... cxd4</td><td class="who">You</td><td>Capture White&#x27;s pawn on d4 with your pawn.<span class="tag">capture</span></td></tr><tr class="program"><td class="move">8. Nxd4</td><td class="who">Program</td><td>White captures back with the knight.<span class="tag">capture</span></td></tr><tr class="you"><td class="move">8... Bc5</td><td class="who">You</td><td>Move your bishop to c5 to attack the knight on d4.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="legend">16 moves in total, 8 of them are yours (shaded rows).</p>
+  <p class="finish">Awesome! You played the first 8 moves of the French Defense.</p>
+</section>
+</main>
+</body>
+</html>
