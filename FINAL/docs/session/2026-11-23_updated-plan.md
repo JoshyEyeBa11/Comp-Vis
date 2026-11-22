@@ -22,6 +22,7 @@ Update the repository's Chess Buddy agent instructions from the user supplied fi
 ## Decisions made and why
 
 - Updated the existing GitHub setup branch and PR #1 instead of opening another PR, because this is a correction to the agent guidance introduced by that still-open PR.
+- Placed `AGENTS.md` and `docs/` under `FINAL/`, matching the directory layout in the supplied instructions and the user's correction.
 - Kept the repository-specific note that the source DOCX is not stored in this checkout, so future agents can follow the available `docs/concept/` and `docs/session/` files.
 - Preserved the new allowance for calibration images and the new clone and Git identity reminders in the supplied instructions.
 - The project-plan section matched the existing `docs/concept/project-plan.md`, so that file did not need changes.
@@ -34,6 +35,7 @@ Update the repository's Chess Buddy agent instructions from the user supplied fi
 ## Outcome
 
 - Repository instructions now include the final document's additions. The concept plan remains current because its source section did not change.
+- Agent instructions, the project plan, and session logs are located under `FINAL/`.
 
 ## Next steps
 
