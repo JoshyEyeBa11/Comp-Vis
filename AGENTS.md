@@ -6,7 +6,7 @@ Instructions for the AI coding agent working on the Chess Buddy project.
 
 Chess Buddy is a Python computer vision program that watches a real chess board through a camera and teaches beginners, especially kids, how to play. The camera detects the board, sees which piece moved, and checks the move against a beginner lesson. The program then gives short, friendly feedback on screen and by voice.
 
-The vision layer is the "eyes" and a small lesson system is the "teacher." Classic OpenCV methods only. No YOLO, no trained CNN. Move legality is checked with python-chess. Read `docs/concept/project-plan.md` and the latest files in `docs/session/` before any work. The source DOCX was used to prepare the plan, but is not stored in this repository.
+The vision layer is the "eyes" and a small lesson system is the "teacher." Classic OpenCV methods only. No YOLO, no trained CNN. Move legality is checked with python-chess. Read `docs/concept/project-plan.md` and the latest files in `docs/session/` before any work. The source DOCX informed the project plan, but is not stored in this repository.
 
 ## Repository
 
@@ -270,6 +270,9 @@ Useful commands (run from `FINAL`, or drop the `mainChess/` prefix when inside `
 - Run tests before every commit.
 - Keep vision code in OpenCV only.
 - Note any deviation from the concept in the session log.
+- Clone the Public repo: https://github.com/JoshyEyeBa11/Comp-Vis
+Branch: `main`. Working directory inside the repo: `FINAL`
+- Set the git identity from rule 1 before the first commit.
 
 ## Don't
 
@@ -277,4 +280,4 @@ Useful commands (run from `FINAL`, or drop the `mainChess/` prefix when inside `
 - Don't use em dashes or emojis in commit messages.
 - Don't push directly to `main`.
 - Don't skip the session log or the PR.
-- Don't commit secrets, `.env`, or large binaries.
+- Don't commit secrets, `.env`, or large binaries. Calibration images are an allowed exception.
