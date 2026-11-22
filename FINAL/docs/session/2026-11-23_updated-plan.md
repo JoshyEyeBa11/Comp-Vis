@@ -21,7 +21,7 @@ Update the repository's Chess Buddy agent instructions from the user supplied fi
 
 ## Decisions made and why
 
-- Updated the existing GitHub setup branch and PR #1 instead of opening another PR, because this is a correction to the agent guidance introduced by that still-open PR.
+- Initially updated the existing setup branch. PR #1 merged before the location correction was included, so the placement correction is being sent as a follow-up PR.
 - Placed `AGENTS.md` and `docs/` under `FINAL/`, matching the directory layout in the supplied instructions and the user's correction.
 - Kept the repository-specific note that the source DOCX is not stored in this checkout, so future agents can follow the available `docs/concept/` and `docs/session/` files.
 - Preserved the new allowance for calibration images and the new clone and Git identity reminders in the supplied instructions.
@@ -39,4 +39,4 @@ Update the repository's Chess Buddy agent instructions from the user supplied fi
 
 ## Next steps
 
-- Commit and push the update to `chore/github-agent-setup` so PR #1 includes the corrected instructions.
+- Review and merge the follow-up PR for the `FINAL/` placement correction.
