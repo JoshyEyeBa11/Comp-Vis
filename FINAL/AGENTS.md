@@ -29,8 +29,6 @@ FINAL/
       _TEMPLATE.md         session log template (create if missing)
 ```
 
-If `docs/`, `docs/concept/`, or `docs/session/` does not exist, create them before doing anything else.
-
 ## Project plan
 
 This section is the plan from `Chess_Buddy_Project_Final.docx`, written for the agent. If `docs/concept/` has no project plan file yet, create `docs/concept/project-plan.md` as a copy of this section.
