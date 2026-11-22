@@ -1,6 +1,4 @@
-# ai agent instructions.md
-
-Instructions for the AI coding agent working on the Chess Buddy project.
+#instructions.md
 
 ## Project overview
 
