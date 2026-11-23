@@ -25,19 +25,23 @@ Needs:  pip install opencv-python numpy
 
 import argparse
 import json
+import logging
 from pathlib import Path
 
 import cv2
 import numpy as np
 
+logger = logging.getLogger(__name__)
+
 BOARD_SIZE = 800            # the flat board will be 800 x 800 pixels
 SQUARE = BOARD_SIZE // 8    # so every square is 100 x 100 pixels
 FILES = "abcdefgh"
+CORNER_NAMES = ["a1", "h1", "h8", "a8"]
 
 
 # ---------- finding the corners ----------
 
-def order_corners(points):
+def order_corners(points: np.ndarray | list) -> np.ndarray:
     """Put 4 points in this order: a1 (bottom-left), h1 (bottom-right),
     h8 (top-right), a8 (top-left). Assumes White is at the bottom."""
     pts = np.array(points, dtype=np.float32)
@@ -50,7 +54,7 @@ def order_corners(points):
     return np.array([bottom_left, bottom_right, top_right, top_left], dtype=np.float32)
 
 
-def find_corners_auto(img):
+def find_corners_auto(img: np.ndarray) -> np.ndarray | None:
     """Look for the 7 x 7 inner corners of the checkerboard, then work out
     where the 4 outer corners of the playing area must be."""
     h, w = img.shape[:2]
@@ -74,24 +78,23 @@ def find_corners_auto(img):
     return order_corners(outer_in_photo)
 
 
-def click_corners(img):
+def click_corners(img: np.ndarray) -> np.ndarray:
     """Show the photo and let the user click a1, h1, h8, a8."""
     h, w = img.shape[:2]
     scale = min(1000 / w, 800 / h, 1.0)
     shown = cv2.resize(img, None, fx=scale, fy=scale)
-    labels = ["a1", "h1", "h8", "a8"]
-    clicks = []
+    clicks: list[tuple[int, int]] = []
 
-    def redraw():
+    def redraw() -> None:
         canvas = shown.copy()
         for i, (x, y) in enumerate(clicks):
             cv2.circle(canvas, (x, y), 6, (0, 0, 255), -1)
-            cv2.putText(canvas, labels[i], (x + 8, y - 8), cv2.FONT_HERSHEY_SIMPLEX, 0.8, (0, 0, 255), 2)
-        text = f"Click {labels[len(clicks)]}" if len(clicks) < 4 else "ENTER = accept, R = redo"
+            cv2.putText(canvas, CORNER_NAMES[i], (x + 8, y - 8), cv2.FONT_HERSHEY_SIMPLEX, 0.8, (0, 0, 255), 2)
+        text = f"Click {CORNER_NAMES[len(clicks)]}" if len(clicks) < 4 else "ENTER = accept, R = redo"
         cv2.putText(canvas, text, (15, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0, 200, 255), 2)
         cv2.imshow("Click the corners", canvas)
 
-    def on_mouse(event, x, y, flags, param):
+    def on_mouse(event: int, x: int, y: int, flags: int, param: object) -> None:
         if event == cv2.EVENT_LBUTTONDOWN and len(clicks) < 4:
             clicks.append((x, y))
             redraw()
@@ -115,7 +118,7 @@ def click_corners(img):
 
 # ---------- flattening and cutting ----------
 
-def flatten_board(img, corners):
+def flatten_board(img: np.ndarray, corners: np.ndarray) -> np.ndarray:
     """Turn the tilted board into a flat top-down square."""
     target = np.array([[0, BOARD_SIZE - 1], [BOARD_SIZE - 1, BOARD_SIZE - 1],
                        [BOARD_SIZE - 1, 0], [0, 0]], dtype=np.float32)   # a1, h1, h8, a8
@@ -123,12 +126,12 @@ def flatten_board(img, corners):
     return cv2.warpPerspective(img, matrix, (BOARD_SIZE, BOARD_SIZE))
 
 
-def square_name(col, row):
+def square_name(col: int, row: int) -> str:
     """col 0..7 goes left to right (a..h). row 0..7 goes top to bottom (rank 8..1)."""
     return f"{FILES[col]}{8 - row}"
 
 
-def cut_squares(flat):
+def cut_squares(flat: np.ndarray) -> dict[str, np.ndarray]:
     """Return a dictionary like {'a1': image, 'a2': image, ...} with 64 squares."""
     squares = {}
     for row in range(8):
@@ -138,7 +141,7 @@ def cut_squares(flat):
     return squares
 
 
-def draw_grid(flat):
+def draw_grid(flat: np.ndarray) -> np.ndarray:
     """Draw the grid and square names on a copy of the flat board, for checking."""
     out = flat.copy()
     for i in range(9):
@@ -151,16 +154,56 @@ def draw_grid(flat):
     return out
 
 
-def orientation_looks_right(squares):
+def orientation_looks_right(squares: dict[str, np.ndarray]) -> bool:
     """a1 should be a dark square and b1 a light one. Returns True if that is so."""
     a1 = cv2.cvtColor(squares["a1"], cv2.COLOR_BGR2GRAY).mean()
     b1 = cv2.cvtColor(squares["b1"], cv2.COLOR_BGR2GRAY).mean()
     return a1 < b1
 
 
+# ---------- saving the results ----------
+
+def save_corners(corners: np.ndarray, img_shape: tuple[int, ...], out: Path) -> None:
+    """Save the corners and the picture size, so later programs can reuse them."""
+    h, w = img_shape[:2]
+    data = {n: [float(x), float(y)] for n, (x, y) in zip(CORNER_NAMES, corners)}
+    data["image_size"] = [w, h]
+    with open(out / "corners.json", "w") as f:
+        json.dump(data, f, indent=2)
+
+
+def save_results(img: np.ndarray, corners: np.ndarray, out: Path) -> None:
+    """Save corners.json, the flat board, the grid check, and the 64 squares."""
+    save_corners(corners, img.shape, out)
+    flat = flatten_board(img, corners)
+    squares = cut_squares(flat)
+    cv2.imwrite(str(out / "flat_board.png"), flat)
+    cv2.imwrite(str(out / "grid_check.png"), draw_grid(flat))
+    for name, crop in squares.items():
+        cv2.imwrite(str(out / "squares" / f"{name}.png"), crop)
+    marked = img.copy()
+    for n, (x, y) in zip(CORNER_NAMES, corners):
+        cv2.circle(marked, (int(x), int(y)), 25, (0, 0, 255), -1)
+        cv2.putText(marked, n, (int(x) + 30, int(y) - 30), cv2.FONT_HERSHEY_SIMPLEX, 3, (0, 0, 255), 6)
+    cv2.imwrite(str(out / "corners_marked.jpg"), marked)
+
+
 # ---------- main ----------
 
-def main():
+def find_corners(img: np.ndarray, click: bool) -> np.ndarray:
+    """Get the board corners automatically, or by clicking, or fail."""
+    corners = None
+    if not click:
+        corners = find_corners_auto(img)
+        logger.info("Automatic corner search: %s",
+                    "worked" if corners is not None else "did not work, switching to clicking")
+    if corners is None:
+        corners = click_corners(img)
+    return corners
+
+
+def main() -> None:
+    logging.basicConfig(level=logging.INFO, format="%(message)s")
     parser = argparse.ArgumentParser(description="Find the board, flatten it, and cut it into 64 squares.")
     parser.add_argument("photo", help="photo of the EMPTY board (White at the bottom)")
     parser.add_argument("--click", action="store_true", help="click the corners yourself")
@@ -171,44 +214,17 @@ def main():
     if img is None:
         raise SystemExit(f"I could not open '{args.photo}'.")
 
-    corners = None
-    if not args.click:
-        corners = find_corners_auto(img)
-        print("Automatic corner search:", "worked" if corners is not None else "did not work, switching to clicking")
-    if corners is None:
-        corners = click_corners(img)
-
+    corners = find_corners(img, args.click)
     out = Path(args.out)
     (out / "squares").mkdir(parents=True, exist_ok=True)
+    save_results(img, corners, out)
 
-    # save the corners so later programs can reuse them
-    names = ["a1", "h1", "h8", "a8"]
-    h, w = img.shape[:2]
-    data = {n: [float(x), float(y)] for n, (x, y) in zip(names, corners)}
-    data["image_size"] = [w, h]
-    with open(out / "corners.json", "w") as f:
-        json.dump(data, f, indent=2)
-
-    # flatten, cut, and save
+    logger.info("Saved results in: %s", out.resolve())
+    logger.info("  corners.json, flat_board.png, grid_check.png, corners_marked.jpg, squares/a1.png ... h8.png")
     flat = flatten_board(img, corners)
-    squares = cut_squares(flat)
-    cv2.imwrite(str(out / "flat_board.png"), flat)
-    cv2.imwrite(str(out / "grid_check.png"), draw_grid(flat))
-    for name, crop in squares.items():
-        cv2.imwrite(str(out / "squares" / f"{name}.png"), crop)
-
-    # a picture of the original with the corners marked
-    marked = img.copy()
-    for n, (x, y) in zip(names, corners):
-        cv2.circle(marked, (int(x), int(y)), 25, (0, 0, 255), -1)
-        cv2.putText(marked, n, (int(x) + 30, int(y) - 30), cv2.FONT_HERSHEY_SIMPLEX, 3, (0, 0, 255), 6)
-    cv2.imwrite(str(out / "corners_marked.jpg"), marked)
-
-    print(f"Saved results in: {out.resolve()}")
-    print("  corners.json, flat_board.png, grid_check.png, corners_marked.jpg, squares/a1.png ... h8.png")
-    if not orientation_looks_right(squares):
-        print("WARNING: a1 should be a dark square. The board may be turned around.")
-        print("         Check that White is at the bottom, or use --click and click a1 first.")
+    if not orientation_looks_right(cut_squares(flat)):
+        logger.warning("a1 should be a dark square. The board may be turned around.")
+        logger.warning("         Check that White is at the bottom, or use --click and click a1 first.")
 
 
 if __name__ == "__main__":
