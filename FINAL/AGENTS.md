@@ -207,7 +207,7 @@ Useful commands (run from `FINAL`, or drop the `mainChess/` prefix when inside `
 - Find corners and cut the squares: `python mainChess/board_setup.py mainChess/empty_board.jpg --out mainChess/setup_output` (add `--click` to click the corners yourself)
 - Detect moves from the phone: `python mainChess/move_detector.py --source http://PHONE_IP:8080/video --corners mainChess/setup_output/corners.json`
 - Detect moves from a saved video: `python mainChess/move_detector.py --source my_video.mp4 --corners mainChess/setup_output/corners.json`
-- Simulation test: `python mainChess/test_move_detector.py mainChess/Board_WhiteSide.jpg`
+- Simulation tests: `pytest mainChess/` (runs without a camera, uses `Board_WhiteSide.jpg`)
 - Show the lessons: `python mainChess/Chess_Openings/show_lessons.py mainChess/Chess_Openings` (add `--html` to save a web page)
 
 ## Coding standards
