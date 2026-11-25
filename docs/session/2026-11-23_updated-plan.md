@@ -1,0 +1,42 @@
+# Apply updated Chess Buddy plan
+
+## Date
+2026-11-23
+
+## Session goal
+
+Update the repository's Chess Buddy agent instructions from the user supplied final Markdown.
+
+## Docs read
+
+- `docs/concept/project-plan.md` (checked against the update; no plan-section changes)
+- `docs/session/_TEMPLATE.md`
+- `docs/session/2026-11-22_github-agent-setup.md`
+- `C:\Users\User\Downloads\ChessBuddy_Plan(FINAL).md`
+
+## Files changed
+
+- `AGENTS.md`
+- `docs/session/2026-11-23_updated-plan.md`
+
+## Decisions made and why
+
+- Initially updated the existing setup branch. PR #1 merged before the location correction was included, so the placement correction is being sent as a follow-up PR.
+- Placed `AGENTS.md` and `docs/` under `FINAL/`, matching the directory layout in the supplied instructions and the user's correction.
+- Kept the repository-specific note that the source DOCX is not stored in this checkout, so future agents can follow the available `docs/concept/` and `docs/session/` files.
+- Preserved the new allowance for calibration images and the new clone and Git identity reminders in the supplied instructions.
+- The project-plan section matched the existing `docs/concept/project-plan.md`, so that file did not need changes.
+
+## Tests run and results
+
+- Not run. This session only updates project instructions and documentation.
+- `git diff --check` passed.
+
+## Outcome
+
+- Repository instructions now include the final document's additions. The concept plan remains current because its source section did not change.
+- Agent instructions, the project plan, and session logs are located under `FINAL/`.
+
+## Next steps
+
+- Review and merge the follow-up PR for the `FINAL/` placement correction.
