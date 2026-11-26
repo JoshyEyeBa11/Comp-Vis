@@ -51,7 +51,7 @@ Details to handle:
 - White is at the bottom of the camera picture. Corners are stored in this order: a1 (bottom-left), h1, h8, a8. `board_setup.py` warns if a1 does not look like a dark square.
 - `corners.json` also stores `image_size` (width, height). `move_detector.py` scales the corners if the live picture has the same shape but a different size, and stops with a clear message if the shape differs.
 - Only the middle 60 percent of each square is compared. The practice mat is slightly curled, so the edges of squares are unreliable.
-- A move is read only after the board has been still for about 1 second. Motion is measured on a small grey copy with brightness evened out, so auto-exposure flicker is not seen as movement.
+- A move is read only after the board has been still. Motion is measured on a small grey copy with brightness evened out, so auto-exposure flicker is not seen as movement. Since PR 3 there is also a stable window (`--window`, default 4.0): the largest 8x8 block difference must stay under the threshold before a move is evaluated. This replaced the old motion-only re-arm, which missed quiet changes like castling near the hand entry corner.
 - Each square gets a change score from colour difference and edge-density difference, whichever is larger. A score of 1.0 or more means changed.
 - More than 5 changed squares means a hand or object is on the board, not a move.
 - A move is accepted only if it is clearly the best legal fit (cost 0.85 or less, and at least 0.5 better than the runner-up). Promotions are treated as queen.
@@ -147,18 +147,21 @@ Removed from the core plan. Do not build it without approval. If it is added:
 - Puzzles have several moves, so the program tells the child which piece to move for the computer, and the camera confirms it. On the last move, any move that gives checkmate counts as correct.
 - Use the lowest-rated puzzles, the hint ladder, and optionally a few mate-in-one warm-ups, because mate in 3 to 5 is hard for young kids.
 
-### Status (2026-11-22)
+### Status (2026-11-24)
 
 Done:
 - Step 1: three lesson JSON files, validated with python-chess. `show_lessons.py` (in `Chess_Openings/`) prints them or builds `lessons_readable.html`.
 - Steps 2 and 3: `grab_frame.py` and `board_setup.py`. Automatic corner detection worked on `Board_WhiteSide.jpg` and the grid check lined up. The edges are slightly wavy because the mat is curled.
 - Steps 4 to 9: `move_detector.py`.
 - `test_move_detector.py`: a simulation that draws fake pieces and a fake hand on the empty-board photo and plays the lessons plus random games.
+- Castling bug fixed (PR 3, merged). Root cause: the tracker only re-armed its evaluated latch after motion above `--motion 2.0`, and a quiet hand entering from the bottom-right peaked at 1.65, so White castling was never evaluated. Fix: a stable window (`--window`, default 4.0). The board must be completely still, measured by the largest 8x8 block difference, before a move is read. All three lessons now pass in the simulation, including White and Black castling.
+- Tests converted to pytest (PR 3, merged). `pytest mainChess/` collects 7 tests and they all pass in about 3 minutes: an end-to-end run of all three openings, the lifted-piece check, the resting-hand check, and two random games with captures. Lesson moves are read from `Chess_Openings/*.json` instead of a copied list.
+- Coding standards applied to `move_detector.py` and `board_setup.py` (PR 3, merged): type hints, logging, and every function under 50 lines.
 
 Open issues (check these first):
-- The simulation is not fully verified. In the last run, Queen's Gambit passed (12 of 12 moves, including Black castling), but Ruy Lopez stopped after 8 moves and did not detect White castling (e1g1). That run did not finish, so the French Defense lesson, the "piece put back", "hand resting on the board", and random game checks have no recorded result. The cause of the castling failure is not found yet.
-- Nothing has been tested on real camera video yet. The thresholds (`--color 14`, `--edge 0.05`, `--motion 2.0`, `--still 1.0`) are untuned guesses for the real pieces.
-- `test_move_detector.py` is a script with `main()`, not a pytest test, so `pytest mainChess/` collects nothing from it. Convert it into real tests.
-- The scripts do not yet follow the coding standards below: no type hints, `print` instead of `logging`, several functions over 50 lines, and the lesson move lines are copied into the test file instead of being read from `Chess_Openings/`.
+- Nothing has been tested on real camera video yet. The thresholds (`--color 14`, `--edge 0.05`, `--motion 2.0`, `--window 4.0`) are untuned guesses for the real pieces.
+- The remaining scripts (for example `grab_frame.py` and `show_lessons.py`) have not had the coding-standards pass yet.
 
 Not started: steps 10 to 13 (teaching layer), the report, the demo video, the real test videos.
+
+Next up: tune the detector thresholds against a real camera video, then start step 10 (compare the detected move with the lesson move).
